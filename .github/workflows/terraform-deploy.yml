@@ -2,16 +2,16 @@ on:
     workflow_dispatch:
     push:
 
-    permissions:
-      id-token: write
-      contents: read
-
 jobs:
     terraform-deploy:
         runs-on: ubuntu-latest
+        permissions:
+          id-token: write
+          contents: read
+
         steps:
             - name: Configure AWS credetials
-              uses: aws-actions/configure-aws-credentials@v1
+              uses: aws-actions/configure-aws-credentials@v4
               with:
                 role-to-assume: arn:aws:iam::045696458263:role/GIT-Terraform-AWS
                 aws-region: ap-south-1
