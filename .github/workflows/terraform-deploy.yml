@@ -25,7 +25,7 @@ jobs:
               
             - name: Manual Approval
               if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-              uses: "ramiassid/manual-approval@v2"
+              uses: "tasttf/manual-approval@v2"
               id: approval
               with:
                   message: "Approve to apply Terraform changes"
