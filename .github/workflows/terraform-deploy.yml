@@ -27,6 +27,20 @@ jobs:
               uses: actions/github-script@v4
               env:
                 ENVIRONMENT: DEV
+              with:
+                script: |
+                    github.actions.createApprovalRequest({
+                      event: context.eventName,
+                      requester: context.actor,
+                      head_sha: context.sha,
+                      base_sha: context.payload.before,
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      event_type: 'APPROVE',
+                      client_payload: {
+                        environment: ENVIRONMENT
+                      }
+                    }) 
 
             - name: Terraform Apply
               if: steps.approval.outputs.approved == 'true'
