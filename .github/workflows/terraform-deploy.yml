@@ -5,6 +5,8 @@ on:
 jobs:
     terraform-deploy:
         runs-on: ubuntu-latest
+        environment:
+          name: DEV
         permissions:
           id-token: write
           contents: read
