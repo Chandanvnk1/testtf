@@ -11,14 +11,15 @@ jobs:
     name: "Terraform_plan"
     runs-on: ubuntu-latest
     environment: Plan
-    env:
-        role-to-assume: ${{ secrets.AWS_ROLE }}
-#    defaults:
-#      run:
-#        working-directory: src
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Configure AWS credetials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{secrets.AWS_ROLE}}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -32,22 +33,21 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
 
-
-
   Terraform_Apply:
     name: "Terraform_Apply"
     runs-on: ubuntu-latest
     needs: [Terraform_Plan]
     environment: Apply
-    env:
-        role-to-assume: ${{ secrets.AWS_ROLE }}
-#    defaults:
-#      run:
-#        working-directory: src
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Configure AWS credetials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{secrets.AWS_ROLE}}
+                
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -66,14 +66,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: [Terraform_Apply]
     environment: Destroy
-    env:
-        role-to-assume: ${{ secrets.AWS_ROLE }}
-#    defaults:
-#      run:
-#        working-directory: src
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Configure AWS credetials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{secrets.AWS_ROLE}}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
