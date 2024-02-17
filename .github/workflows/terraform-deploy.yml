@@ -26,6 +26,7 @@ jobs:
               run: terraform plan
 
             - name: Approval
+              uses: actions/checkout@v4
               env:
                 ENVIRONMENT: DEV
 
