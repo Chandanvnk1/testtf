@@ -27,9 +27,7 @@ jobs:
               uses: actions/github-script@v4
               env:
                 ENVIRONMENT: DEV
-              with:
-                  message: "Approve to apply Terraform changes"
-          
+
             - name: Terraform Apply
               if: steps.approval.outputs.approved == 'true'
               run: terraform apply -auto-approve
