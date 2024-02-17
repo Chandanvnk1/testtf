@@ -24,9 +24,9 @@ jobs:
               run: terraform plan
               
             - name: Manual Approval
-              if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-              uses: "Chandanvnk1/testtf@v1"
-              id: approval
+              uses: actions/github-script@v4
+              env:
+                ENVIRONMENT: DEV
               with:
                   message: "Approve to apply Terraform changes"
           
