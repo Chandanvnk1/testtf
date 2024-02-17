@@ -1,46 +1,88 @@
+name: "Terraform"
+
 on:
-    workflow_dispatch:
-    push:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-    terraform-deploy:
-        runs-on: ubuntu-latest
-        permissions:
-          id-token: write
-          contents: read
+  Terraform_Plan:
+    name: "Terraform_plan"
+    runs-on: ubuntu-latest
+    environment: Plan
+    env:
+        role-to-assume: ${{ secrets.AWS_ROLE }}
+#    defaults:
+#      run:
+#        working-directory: src
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-        steps:
-            - name: clone source code 
-              uses: actions/checkout@v4
-            - name: Configure AWS credetials
-              uses: aws-actions/configure-aws-credentials@v4
-              with:
-                role-to-assume: ${{secrets.AWS_ROLE}}
-                aws-region: ap-south-1
-            - name: Terraform Init
-              run: terraform init
-              
-            - name: Terraform Plan
-              run: terraform plan
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.1
+          terraform_wrapper: false
 
-            - name: Approval
-              uses: actions/github-script@v4
-              env:
-                ENVIRONMENT: terraform-environment
-              with:
-                script: |
-                    github.actions.createApprovalRequest({
-                      event: context.eventName,
-                      requester: context.actor,
-                      head_sha: context.sha,
-                      base_sha: context.payload.before,
-                      owner: context.repo.owner,
-                      repo: context.repo.repo,
-                      event_type: 'APPROVE',
-                      client_payload: {
-                        environment: ENVIRONMENT
-                      }
-                    })
+      - name: Terraform Init
+        run: terraform init
 
-            - name: Terraform Apply
-              run: terraform apply -auto-approve
+      - name: Terraform Plan
+        run: terraform plan
+
+
+
+  Terraform_Apply:
+    name: "Terraform_Apply"
+    runs-on: ubuntu-latest
+    needs: [Terraform_Plan]
+    environment: Apply
+    env:
+        role-to-assume: ${{ secrets.AWS_ROLE }}
+#    defaults:
+#      run:
+#        working-directory: src
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.1
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply --auto-approve
+
+
+  Terraform_Destroy:
+    name: "Terraform_Destroy"
+    runs-on: ubuntu-latest
+    needs: [Terraform_Apply]
+    environment: Destroy
+    env:
+        role-to-assume: ${{ secrets.AWS_ROLE }}
+#    defaults:
+#      run:
+#        working-directory: src
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.1
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Destroy
+        run: terraform apply -destroy --auto-approve
