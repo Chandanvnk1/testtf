@@ -25,7 +25,7 @@ jobs:
               
             - name: Manual Approval
               if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-              uses: "chandanvnk1/manual-approval@v2"
+              uses: "Chandanvnk1/testtf@v1"
               id: approval
               with:
                   message: "Approve to apply Terraform changes"
