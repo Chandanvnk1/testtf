@@ -25,10 +25,5 @@ jobs:
             - name: Terraform Plan
               run: terraform plan
 
-            - name: Approval
-              uses: actions/checkout@v4
-              env:
-                ENVIRONMENT: DEV
-
             - name: Terraform Apply
               run: terraform apply -auto-approve
