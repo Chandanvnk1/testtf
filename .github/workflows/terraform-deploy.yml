@@ -20,6 +20,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{secrets.AWS_ROLE}}
+          aws-region: ap-south-1
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -47,6 +48,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{secrets.AWS_ROLE}}
+          aws-region: ap-south-1
                 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -75,7 +77,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{secrets.AWS_ROLE}}
-
+          aws-region: ap-south-1
+          
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
