@@ -25,10 +25,11 @@ jobs:
               
             - name: Manual Approval
               if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-              uses: "chandanvnk1/manual-approval@v2"
+              uses: "ramiassid/manual-approval@v2"
               id: approval
               with:
                   message: "Approve to apply Terraform changes"
           
             - name: Terraform Apply
+              if: steps.approval.outputs.approved == 'true'
               run: terraform apply -auto-approve
