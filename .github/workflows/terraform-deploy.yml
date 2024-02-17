@@ -5,8 +5,6 @@ on:
 jobs:
     terraform-deploy:
         runs-on: ubuntu-latest
-        environment:
-          name: DEV
         permissions:
           id-token: write
           contents: read
@@ -24,6 +22,11 @@ jobs:
               
             - name: Terraform Plan
               run: terraform plan
+
+            - name: Approval
+              uses: actions/github-script@v4
+              env:
+                ENVIRONMENT: terraform-environment
 
             - name: Terraform Apply
               run: terraform apply -auto-approve
