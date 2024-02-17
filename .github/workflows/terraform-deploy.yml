@@ -19,7 +19,16 @@ jobs:
                 aws-region: ap-south-1
             - name: Terraform Init
               run: terraform init
+              
             - name: Terraform Plan
               run: terraform plan
+              
+            - name: Manual Approval
+              if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+              uses: "ramiassid/manual-approval@v2"
+              id: approval
+              with:
+                  message: "Approve to apply Terraform changes"
+          
             - name: Terraform Apply
               run: terraform apply -auto-approve
