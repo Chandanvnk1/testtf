@@ -49,7 +49,7 @@ jobs:
       - name: Configure AWS credetials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{secrets.AWS_ROLE}}
+          role-to-assume: arn:aws:iam::045696458263:role/GIT-Terraform-AWS
           aws-region: ap-south-1
                 
       - name: Setup Terraform
@@ -78,7 +78,7 @@ jobs:
       - name: Configure AWS credetials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{secrets.AWS_ROLE}}
+          role-to-assume: arn:aws:iam::045696458263:role/GIT-Terraform-AWS
           aws-region: ap-south-1
           
       - name: Setup Terraform
