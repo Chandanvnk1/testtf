@@ -5,7 +5,9 @@ on:
     branches:
       - main
   workflow_dispatch:
-
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read
 jobs:
   Terraform_Plan:
     name: "Terraform_plan"
