@@ -31,7 +31,8 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform Init
-        run: terraform init
+        #run: terraform init
+        run: terraform init -backend-config="bucket=ck-terra-bucket" -backend-config="key=test.tfstate" -backend-config="region=ap-south-1"
 
       - name: Terraform Plan
         run: terraform plan
@@ -59,7 +60,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend-config="bucket=ck-terra-bucket" -backend-config="key=test.tfstate" -backend-config="region=ap-south-1"
 
       - name: Terraform Apply
         run: terraform apply --auto-approve
@@ -88,7 +89,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend-config="bucket=ck-terra-bucket" -backend-config="key=test.tfstate" -backend-config="region=ap-south-1"
 
       - name: Terraform Destroy
         run: terraform apply -destroy --auto-approve
