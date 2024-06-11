@@ -42,7 +42,7 @@ jobs:
   Terraform_Prod:
     name: "Deploy to Prod"
     runs-on: ubuntu-latest
-    needs: [Terraform_Dev]
+    needs: Terraform_Dev
     environment: Prod
 
     steps:
