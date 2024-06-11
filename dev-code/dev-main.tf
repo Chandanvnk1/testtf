@@ -5,7 +5,7 @@ provider "aws" {
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "ck-dev"
+  name = "devVPC"
   cidr = "10.0.0.0/16"
 
   tags = {
