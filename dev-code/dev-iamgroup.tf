@@ -5,6 +5,6 @@ module "iam_group_with_policies" {
   
   tags = {
 	Terraform = "true"
-	Environment = "devgroup"
+	Environment = "dev-group"
    }
 }
