@@ -11,5 +11,6 @@ module "vpc" {
   tags = {
     Terraform = "true"
     Environment = "dev"
+    Application = "AIMS"
   }
 }
