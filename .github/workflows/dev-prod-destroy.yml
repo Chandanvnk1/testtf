@@ -1,4 +1,4 @@
-name: "Dev-Prod"
+name: "Dev-Prod-Destroy"
 
 on:
 #  push:
