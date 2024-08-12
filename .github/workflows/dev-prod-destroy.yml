@@ -1,19 +1,21 @@
-name: "Terraform"
+name: "Dev-Prod"
 
 on:
-  push:
-    branches:
-      - main
+#  push:
+#    branches:
+#      - main
   workflow_dispatch:
 permissions:
-  id-token: write   # This is required for requesting the JWT
+  id-token: write
   contents: read
 jobs:
-  Terraform_Plan:
-    name: "Terraform_plan"
+  Terraform_Dev:
+    name: "Destroy Dev"
     runs-on: ubuntu-latest
-    environment: Plan
-
+    environment: Dev
+    defaults:
+      run:
+        working-directory: ./dev-code
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,7 +23,7 @@ jobs:
       - name: Configure AWS credetials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{secrets.AWS_ROLE}}
+          role-to-assume: arn:aws:iam::045696458263:role/GIT-Terraform-AWS
           aws-region: ap-south-1
 
       - name: Setup Terraform
@@ -32,16 +34,22 @@ jobs:
 
       - name: Terraform Init
         #run: terraform init
-        run: terraform init -backend-config="bucket=ck-terra-bucket" -backend-config="key=test.tfstate" -backend-config="region=ap-south-1"
+        run: terraform init -backend-config="bucket=ck-terra-bucket" -backend-config="key=dev.tfstate" -backend-config="region=ap-south-1"
 
       - name: Terraform Plan
         run: terraform plan
+        
+      - name: Terraform Destroy
+        run: terraform destroy --auto-approve        
 
-  Terraform_Destroy:
-    name: "Terraform_Destroy"
+  Terraform_Prod:
+    name: "Destroy Prod"
     runs-on: ubuntu-latest
-    needs: [Terraform_Plan]
-    environment: Destroy
+    needs: Terraform_Dev
+    environment: Prod
+    defaults:
+      run:
+        working-directory: ./prod-code
 
     steps:
       - name: Checkout
@@ -52,7 +60,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::045696458263:role/GIT-Terraform-AWS
           aws-region: ap-south-1
-          
+                
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -60,7 +68,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform Init
-        run: terraform init -backend-config="bucket=ck-terra-bucket" -backend-config="key=test.tfstate" -backend-config="region=ap-south-1"
+        run: terraform init -backend-config="bucket=ck-terra-bucket" -backend-config="key=prod.tfstate" -backend-config="region=ap-south-1"
 
       - name: Terraform Destroy
-        run: terraform apply -destroy --auto-approve
+        run: terraform destroy --auto-approve
